@@ -1,30 +1,36 @@
 name: Deploy HLS to GitHub Pages
 
-# Trigger on pushes to main
 on:
   push:
     branches:
       - main
+
+# Grant necessary token permissions for pages and id-token
+permissions:
+  contents: read        # for checkout
+  pages: write          # for Pages deploy
+  id-token: write       # for OIDC token
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Check out your repo
-      - name: Checkout
+      # 1. Checkout the repo
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 2. (Optional) Build or preprocess your files here
-      # - name: Generate HLS
-      #   run: ffmpeg …  # if you’re producing .m3u8/.ts on the fly
+      # 2. (Optional) Build or preprocess files
+      # - name: Build HLS artifacts
+      #   run: |
+      #     ffmpeg ... # your build commands
 
-      # 3. Package the entire directory as the Pages artifact
+      # 3. Upload the site as artifact
       - name: Upload Pages Artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: .   # includes .m3u8, .ts, HTML, .nojekyll, etc.
+          path: .        # include .m3u8, .ts, HTML, .nojekyll
 
-      # 4. Deploy that artifact to GitHub Pages
+      # 4. Deploy to GitHub Pages
       - name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v1
