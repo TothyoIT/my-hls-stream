@@ -1,0 +1,30 @@
+name: Deploy HLS to GitHub Pages
+
+# Trigger on pushes to main
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Check out your repo
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # 2. (Optional) Build or preprocess your files here
+      # - name: Generate HLS
+      #   run: ffmpeg …  # if you’re producing .m3u8/.ts on the fly
+
+      # 3. Package the entire directory as the Pages artifact
+      - name: Upload Pages Artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: .   # includes .m3u8, .ts, HTML, .nojekyll, etc.
+
+      # 4. Deploy that artifact to GitHub Pages
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v1
